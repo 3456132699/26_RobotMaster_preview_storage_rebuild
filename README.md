@@ -1,79 +1,360 @@
 # 26_Robot Master_preview_storage_rebuild
 
-## What is this storage for
+> 机甲杯备赛 · 文件交互传递仓库说明
+> 本文件面向全体队员，**上传任何文件前请先读第 4 节**。
 
-* The storage is used to communicate while preparing for the competition.
+---
 
-## Why rebuild it
+## 1. 仓库用途
 
-* The former storage belongs to a GitHub account signed in with a Gmail mailbox, which is quite difficult when the internet is pool. 
-* So, I rebuild the storage with a GitHub account signed in with a QQ mailbox.
+用于**机甲杯备赛期间的文件交互与传递**，具体承载：
 
-## What is in .gitignore
+- 各方向（机械 / 电控硬件 / 嵌入式 / 视觉算法 / 运营）的**调研资料、方案文档、参数汇总**
+- 队伍内部**可公开共享**的设计过程文件、会议纪要、进度记录
+- 需要多人接力修改的文本类协作文件（Markdown、表格、代码片段、轻量图纸）
 
-* gitignore now contains:
+> 📌 这个仓库是**传递与协作**用的，不是**归档备份**用的。
+> 大文件、二进制工程、素材原件请走网盘/移动硬盘，仓库里只放轻量的、需要多人看的文本与图纸。
 
-```txt
-# ===== System =====
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-desktop.ini
-*~
+---
 
-# ===== Office / WPS temp&lock =====
-~$*
-*.tmp
-.~lock.*#
+## 2. 仓库参数
 
-# ===== editor / IDE =====
-.vscode/*
-!.vscode/settings.json
-!.vscode/extensions.json
-.idea/
-*.swp
-*.swo
+| 项目 | 内容 |
+|---|---|
+| 仓库地址 | https://github.com/Avril000/26_RobotMaster_preview_storage_rebuild |
+| 仓库属性 | **Public（公开）** ⚠️ |
+| 维护者 | 仓库 Owner / 队伍负责人 |
 
-# ===== build =====
-node_modules/
-dist/
-build/
-out/
-__pycache__/
-*.py[cod]
-venv/
-.venv/
+> ⚠️ **Public 意味着任何人都能看到、clone、fork，且搜索引擎与爬虫可能已缓存。**
+> 「删掉文件」不等于「没上传过」——**一旦 push，就要当作已经永久公开来对待**。
+> 这是第 4 节所有禁令的根本原因。
 
-# ===== log =====
-*.log
-logs/
+---
 
-# ===== intermediate products =====
-*.o
-*.obj
-*.elf
-*.hex
-*.map
-*.lst
+## 3. 仓库管理
 
-# ===== large objects =====
-*.zip
-*.7z
-*.rar
-*.iso
-*.exe
-*.msi
-*.dmg
+### 3.1 固定合并窗口
 
-# ===== private messages =====
-.env
-.env.local
-*.local
-secrets/
-node_modules/
+**每晚 23:30（北京时间）** 会进行一次固定的合并申请（Pull Request）处理：统一审阅、合并当天累积的 PR，并处理冲突。
+
+### 3.2 临时合并需求
+
+如果等不到 23:30、有紧急的合并需求，**可以联系维护者**（队伍群 / GitHub Issue / PR 里 @）申请提前处理。
+
+> 📌 请勿在公开仓库的 Issue、PR、README 或提交信息里留下手机号、微信号、宿舍号等个人联系方式——用队伍群或 GitHub 站内联系即可。
+
+### 3.3 协作流程
+
+```
+1. 从 main 拉出自己的分支（或 fork 后建分支）
+2. 本地提交 → push 到自己的分支
+3. 发起 Pull Request，写清楚改了什么、为什么要改
+4. 等待 23:30 统一合并；紧急情况联系维护者
 ```
 
+### 3.4 网络异常
+
+> **备注：由于网络原因无法进行仓库管理时，默认延后。**
+
+- 遇到 `github.com` 连不上、证书校验失败、push 超时等情况，**不强行重试、不临时改配置硬推**，等网络恢复后顺延到下一个合并窗口
+- 因此**不要卡在 23:30 前最后一刻才提交**，尽量提前留出缓冲
+- 若因网络导致 PR 堆积，维护者会在恢复后统一处理，并在群里说明
+
+### 3.5 备份建议
+
+> **建议：除了远端仓库，也自己做好克隆备份。**
+
+远端仓库是协作通道，不是唯一副本。请每位队员在本地保留一份可用的 clone，重要资料另做一份独立备份（网盘 / 移动硬盘 / 另一台机器）。
+
+```powershell
+# 首次克隆
+git clone https://github.com/Avril000/26_RobotMaster_preview_storage_rebuild.git
+
+# 日常同步（在仓库目录内）
+git pull
+```
+
+> 💡 备份时注意：clone 会带上**完整 Git 历史**。
+> 如果曾经误传过敏感文件，光删当前文件没用，历史里还在（见 4.4）。
+
+### 3.6 Commit message
+
+* 推荐采用Conventional Commits风格：**\<type>(\<scope>):\<description>**
+* type:本次提交的修改类型
+* scope:修改涉及的文件或模块，选填
+* description:描述本次修改的内容
+
+| 类型     | 含义                     | 示例                                 |
+| -------- | ------------------------ | ------------------------------------ |
+| feat     | 新增功能                 | feat(motor):添加电机速度控制         |
+| fix      | 修复问题                 | fix(can):修复电机反馈错误            |
+| refactor | 代码重构，不改变预期功能 | refactor(pid):重构PID控制器接口      |
+| perf     | 性能优化                 | perf(imu):优化姿态解析算法           |
+| docs     | 文档修改                 | docs(README):更新项目README文件      |
+| test     | 添加或修改测试           | test(motor):添加电机控制单元测试     |
+| chore    | 日常维护、配置等修改     | chore(.gitignore):更新.gitignore文件 |
+| build    | 构建系统或依赖修改       | build(CMake):更新CMake配置           |
+| ci       | 持续集成配置修改         | ci:添加自动编译检查                  |
+
+
+
+---
+
+## 4. 上传前自检：什么不可以上传 ⭐
+
+> 这一节请分组对照检查。 **宁可少传一个文件，也不要多传一个不该传的。**
+> 判断总原则：**「这个东西如果被人截图发到公开论坛，我会不会不舒服？」** 会 → 不要传。
+
+### 4.1 分组清单
+
+#### 🔐 A 组 · 凭据与密钥（最高危，一条都不能有）
+
+| 典型文件 / 内容 | 为什么 |
+|---|---|
+| `.env`、`config.ini`、`secrets.*`、`credentials.json`、`*.pem`、`*.key` | 内含密码 / Token |
+| `id_rsa`、`id_ed25519`、任何 SSH **私钥** | 等同账号被盗 |
+| GitHub PAT、API Key、Webhook URL、云平台 AK/SK | 泄露即可被刷用量 |
+| WiFi 密码、路由器后台、实验室设备登录信息 | 校园网相关，风险高 |
+| 代码里写死的密码、Token、内网 IP + 端口 | 硬编码比配置文件更隐蔽 |
+| `.git-credentials`、`~/.gitconfig` 中的凭据 | 凭据管理器相关内容 |
+
+**处理**：一律不传。用环境变量 / 占位符 `YOUR_TOKEN_HERE`；**已经传过的立刻去平台撤销并重新生成**（不是改掉就行）。
+
+#### 🪪 B 组 · 个人信息与隐私
+
+| 典型文件 / 内容 | 为什么 |
+|---|---|
+| 学号、姓名 + 手机 / 邮箱 / 身份证 / 宿舍地址的表格 | Public 仓库 = 公开个人信息 |
+| 报名表、队员信息统计、成绩单、截图里没打码的聊天窗口 | 常同时包含多人的隐私 |
+| 个人照片、证件照、简历 | 与备赛无关 |
+| Word / PDF / 图片里残留的**作者名、批注、修订记录、元数据** | 元数据泄露最容易被忽略 |
+| 截图中的桌面背景、浏览器标签、文件路径、通知栏 | 一张图能暴露很多东西 |
+
+**处理**：脱敏后再传；文档类先清除元数据（Word「检查文档」→ 删除个人信息；PDF 用「另存为优化版」）。
+
+#### 📄 C 组 · 赛事与战队受限材料
+
+| 典型文件 / 内容 | 为什么 |
+|---|---|
+| 组委会**注明不得公开**的规则、制作图、赛题附件 | 可能违反赛事规定 |
+| 其他队伍的技术方案、内部资料、未公开评分/裁判材料 | 涉及他人权益与公平 |
+| 队内未定稿的**策略讨论**、对手分析、内部评分 | 公开后等于裸奔 |
+| 组委会/协会内部沟通记录、群聊截图 | 未经授权不得公开 |
+
+**处理**：不传；需要共享时走队内私有通道。**拿不准就先问维护者。**
+
+#### 🧱 D 组 · 大文件与二进制原件
+
+> GitHub **单文件硬上限 100 MB**（超过直接拒绝 push），仓库总量建议控制在 1 GB 内，且 Public 仓库的流量/克隆成本由所有人承担。
+
+| 典型文件 | 建议 |
+|---|---|
+| 3D 模型源文件：`.SLDPRT` / `.SLDASM` / `.FCStd` / 大型 `.step` / `.stl` | 放网盘；仓库只放轻量图纸 PDF / 关键尺寸表 |
+| 3D 打印切片：`.gcode`、`.3mf`、大型 `.stl` | 不传 |
+| PCB / EDA 工程整包、Gerber 压缩包、元件库整包 | 放网盘；仓库放原理图 PDF + BOM 表 |
+| 固件镜像：`.hex`、`.bin`、`.elf`、`.axf` | 编译产物，不传（见 E 组） |
+| 视觉模型权重：`.pt` / `.pth` / `.onnx` / `.engine`、数据集、标注文件 | 放网盘 / 模型托管；仓库放训练脚本 + 下载说明 |
+| 视频 / 录屏（含 OBS 录制的 `.mkv` / `.mp4`）、原始照片、PSD / AI 源文件 | 放网盘；仓库放压缩截图 |
+| 数据集、日志文件、压缩包 `.zip` / `.rar` / `.7z` | 不传 |
+
+**处理**：大文件走网盘；确实需要版本管理的，先问维护者是否启用 Git LFS（**启用前别先 push 大文件**）。
+
+#### 🔧 E 组 · 编译产物与构建缓存
+
+这些能由源码重新生成，传上去只会制造冲突和体积。
+
+| 技术栈 | 不要传 |
+|---|---|
+| 通用 | `build/`、`dist/`、`out/`、`Debug/`、`Release/`、`*.o`、`*.obj`、`*.log` |
+| Keil MDK | `Objects/`、`Listings/`、`*.axf`、`*.hex`、`*.map`、`*.build_log.htm`、`*.uvoptx`（含本机路径） |
+| CMake / CLion / STM32 | `cmake-build-*/`、`compile_commands.json`（含绝对路径）、`.idea/` |
+| Python | `__pycache__/`、`*.pyc`、`.venv/`、`venv/`、`.pytest_cache/`、`.ipynb_checkpoints/` |
+| Node / 网页 | `node_modules/`、`dist/`、`.next/` |
+| Jupyter | `.ipynb` 的 **output 单元格**（常含绝对路径、临时数据、密钥回显） |
+
+**处理**：写进 `.gitignore`；提交前 `git status` 看一眼有没有意外跟进来的产物。
+
+#### 🖥️ F 组 · 本机环境与绝对路径
+
+| 典型内容 | 为什么 |
+|---|---|
+| 脚本 / CMakeLists / JSON 里写死的 `C:\Users\...`、`D:\桌面\...` | 队友 clone 下来**直接跑挂**；中文 + 空格路径尤其容易出问题 |
+| 编译器 / 工具链绝对路径、调试器序列号、串口号 `COM3` | 每台机器都不一样 |
+| `.vscode/c_cpp_properties.json`、`.idea/`、CLion 工具链 xml | 含本机路径与用户名 |
+| 本机 hosts、代理配置、Clash / VPN 配置文件 | 涉及个人网络环境，且不宜公开 |
+| `*.uvguix.*`（Keil GUI 布局，文件名常带用户名） | 纯个人配置 |
+
+**处理**：改用相对路径 / CMake 变量 / 环境变量；确需共享的 IDE 配置，先把路径清理成通用形式。
+
+#### 🗑️ G 组 · 系统与编辑器临时文件
+
+| 典型文件 |
+|---|
+| `Thumbs.db`、`desktop.ini`（Windows）／`.DS_Store`（macOS 队友） |
+| `~$*.docx`、`~$*.xlsx`、`~$*.pptx`（Office 锁文件） |
+| `*.tmp`、`*.bak`、`*.swp`、`*.swo`、`*~` |
+| EDA 自动备份与锁文件：`*-bak/`、`*.lck`、`.~lock.*`、`*.lck`、`fp-info-cache` |
+| 压缩包解压残留、下载的第三方安装包 `.exe` / `.msi` |
+
+**处理**：全部写进 `.gitignore`。
+
+#### ⚖️ H 组 · 版权与许可风险
+
+| 典型内容 | 为什么 |
+|---|---|
+| 付费教材 / 教程扫描件、网盘扒来的资料包 | 侵权风险，Public 仓库尤其显眼 |
+| 商用字体、商用图库图片、音乐、视频素材 | 授权不覆盖公开分发 |
+| 破解软件、注册机、序列号、商业软件安装包 | 明确违规 |
+| 复制来的开源代码**未保留 LICENSE / 未注明出处** | 违反其开源协议 |
+| 他人战队开源代码直接搬过来改而不署名 | 学术与社区规范问题 |
+
+**处理**：不放。引用第三方内容时保留 LICENSE、写明来源与协议。
+
+#### 🧬 I 组 · Git 自身的坑
+
+| 坑 | 说明 |
+|---|---|
+| **大文件 / 敏感文件已进历史** | 之后 `git rm` 只删当前版本，**历史里仍在**。需要 `git filter-repo` / BFG 重写历史并强推，且 Public 仓库可能已被 fork |
+| `.gitignore` 对**已跟踪文件无效** | 必须先 `git rm --cached <file>` 才会生效 |
+| 嵌套 `.git/` | 把别人的仓库整包拖进来会变成 submodule 指针异常 |
+| 冲突标记残留 | `<<<<<<<`、`=======`、`>>>>>>>` 直接提交 |
+| 提交信息里写密码 / 内部信息 | commit message 也是公开的、也在历史里 |
+| 一次性 `git add .` | 最容易把上面所有东西一网打尽 ⚠️ |
+
+**处理**：提交前养成 `git status` + `git diff --cached` 各看一遍的习惯。
+
+---
+
+### 4.2 上传前 30 秒自检清单
+
+每次 `git push` 之前，逐条过一遍：
+
+- [ ] `git status` 看过，**没有**意料之外的文件
+- [ ] `git diff --cached` 扫过，**没有**密码 / Token / 学号 / 手机号 / 绝对路径
+- [ ] 没有 `.env`、私钥、`*.key`、`*.pem`、配置文件里的真实凭据
+- [ ] 没有大文件 / 二进制工程 / 视频 / 数据集（单文件 < 100 MB，且确实需要版本管理）
+- [ ] 没有 `build/`、`Objects/`、`__pycache__/`、`node_modules/` 等可再生产物
+- [ ] 没有 `Thumbs.db`、`~$*.docx`、`*-bak/` 等临时文件
+- [ ] 文档 / 图片 / 截图已脱敏，元数据已清理
+- [ ] 引用的第三方内容有出处与许可说明
+- [ ] 提交信息里没写敏感内容
+- [ ] 确认过：**这是 Public 仓库，传上去就收不回来**
+
+---
+
+### 4.3 推荐 `.gitignore` 骨架（按本队技术栈定制）
+
+> 建议由维护者放在仓库根目录，各方向再按需补充。
+> 注意：`.gitignore` 只忽略**未被跟踪**的文件，已经提交过的要先 `git rm --cached`。
+
+```gitignore
+# ---- 凭据 / 本机环境（最高优先级）----
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+secrets.*
+credentials.json
+.git-credentials
+
+# ---- Windows / macOS / Office 临时文件 ----
+Thumbs.db
+desktop.ini
+.DS_Store
+~$*
+*.tmp
+*.bak
+*.swp
+*.swo
+*~
+
+# ---- 编译产物 / 构建缓存 ----
+build/
+Build/
+dist/
+out/
+Debug/
+Release/
+cmake-build-*/
+compile_commands.json
+*.o
+*.obj
+*.axf
+*.elf
+*.hex
+*.bin
+*.map
+*.log
+Objects/
+Listings/
+*.build_log.htm
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+*.pt
+*.pth
+*.onnx
+*.engine
+
+# ---- Node / 网页 ----
+node_modules/
+.next/
+
+# ---- IDE 配置（含本机路径，默认忽略）----
+.idea/
+.vscode/
+*.uvguix.*
+*.uvoptx
+
+# ---- EDA / CAD 自动备份与锁文件 ----
+*-bak/
+*.lck
+.~lock.*
+fp-info-cache
+
+# ---- 大文件与二进制原件（走网盘，不进仓库）----
+*.zip
+*.rar
+*.7z
+*.mp4
+*.mkv
+*.mov
+*.psd
+*.ai
+*.gcode
+*.3mf
+*.SLDPRT
+*.SLDASM
+*.FCStd
+*.step
+*.stp
+*.stl
+```
+
+---
+
+### 4.4 万一已经误传了，怎么办
+
+> 顺序别乱，越早处理越好。Public 仓库要按「已经泄露」来处置。
+
+1. **立刻撤销 / 重置**泄露的密码、Token、API Key、SSH 密钥（**优先级最高**，比清理仓库更急）
+2. **不要只 `git rm` 就完事**——历史里还在。联系维护者用 `git filter-repo` 或 BFG 重写历史
+3. 在 GitHub 上提交 **敏感信息移除申请**（Repository → Security / Support，请求清除缓存与搜索索引）
+4. 检查是否已被 fork、是否被搜索引擎收录；Public 仓库要假定**无法 100% 收回**
+5. 在群里同步，让所有人更新本地 clone（旧 clone 里还留有旧历史）
+
+> 🛑 预防远比补救便宜。**上传前那 30 秒，是唯一真正有效的防线。**
+
+---
+
+*本说明由队内维护，如有条款与实际赛事要求冲突，以组委会规定与维护者说明为准。*

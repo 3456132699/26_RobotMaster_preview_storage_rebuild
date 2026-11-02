@@ -60,3 +60,93 @@ logs/
 secrets/
 node_modules/
 
+# ---- 凭据 / 本机环境（最高优先级）----
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+secrets.*
+credentials.json
+.git-credentials
+
+# ---- Windows / macOS / Office 临时文件 ----
+Thumbs.db
+desktop.ini
+.DS_Store
+~$*
+*.tmp
+*.bak
+*.swp
+*.swo
+*~
+
+# ---- 编译产物 / 构建缓存 ----
+build/
+Build/
+dist/
+out/
+Debug/
+Release/
+cmake-build-*/
+compile_commands.json
+*.o
+*.obj
+*.axf
+*.elf
+*.hex
+*.bin
+*.map
+*.log
+Objects/
+Listings/
+*.build_log.htm
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+*.pt
+*.pth
+*.onnx
+*.engine
+
+# ---- Node / 网页 ----
+node_modules/
+.next/
+
+# ---- IDE 配置（含本机路径，默认忽略）----
+.idea/
+.vscode/
+*.uvguix.*
+*.uvoptx
+
+# ---- EDA / CAD 自动备份与锁文件 ----
+*-bak/
+*.lck
+.~lock.*
+fp-info-cache
+
+# ---- 大文件与二进制原件（走网盘，不进仓库）----
+*.zip
+*.rar
+*.7z
+*.mp4
+*.mkv
+*.mov
+*.psd
+*.ai
+*.gcode
+*.3mf
+*.SLDPRT
+*.SLDASM
+*.FCStd
+*.step
+*.stp
+*.stl
