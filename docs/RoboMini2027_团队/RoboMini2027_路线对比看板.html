@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="L0KRqChF8NH0EGZ5DDbhnK">
+<head data-page-node-id="o1iOEU3dc5dCL4A34E4pp3">
+<meta charset="UTF-8" data-page-node-id="Ja8gqM97obhdaGB0O0iBL5">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="jl23m5ZETs3zUQ0PMyummE">
+<title>RoboMini 机甲杯 2027 · 路线对比看板</title>
+<style>
+  :root{
+    --bg:#f5f6f8;
+    --card:#ffffff;
+    --ink:#1f2937;
+    --ink-2:#4b5563;
+    --ink-3:#9ca3af;
+    --line:#e5e7eb;
+    --line-2:#d1d5db;
+    --blue:#2563eb;
+    --amber:#d97706;
+    --amber-bg:#fffbeb;
+    --indigo:#4f46e5;
+    --indigo-bg:#eef2ff;
+    --red:#dc2626;
+    --red-bg:#fef2f2;
+    --green:#059669;
+    --green-bg:#ecfdf5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:40px 28px 80px}
+
+  /* ---------- header ---------- */
+  header{margin-bottom:32px;padding-bottom:24px;border-bottom:2px solid var(--ink)}
+  .eyebrow{font-size:13px;letter-spacing:.14em;color:var(--ink-3);text-transform:uppercase;margin-bottom:10px}
+  h1{font-size:32px;font-weight:700;letter-spacing:-.01em;margin-bottom:12px}
+  .sub{color:var(--ink-2);font-size:15px}
+  .sub b{color:var(--ink)}
+
+  /* ---------- stat strip ---------- */
+  .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin:26px 0 38px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 14px;text-align:center}
+  .stat .n{font-size:26px;font-weight:700;line-height:1.1;letter-spacing:-.02em}
+  .stat .l{font-size:12px;color:var(--ink-3);margin-top:5px}
+  .stat.a .n{color:var(--amber)} .stat.b .n{color:var(--indigo)} .stat.r .n{color:var(--red)}
+
+  /* ---------- sections ---------- */
+  h2{font-size:21px;font-weight:700;margin:44px 0 6px;display:flex;align-items:center;gap:10px}
+  h2::before{content:"";width:4px;height:19px;background:var(--blue);border-radius:2px}
+  .lead{color:var(--ink-2);font-size:14px;margin-bottom:20px}
+
+  /* ---------- route cards ---------- */
+  .routes{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .route{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .route .hd{padding:18px 22px;border-bottom:1px solid var(--line)}
+  .route.s .hd{background:var(--amber-bg)}
+  .route.t .hd{background:var(--indigo-bg)}
+  .route .tag{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:6px}
+  .route.s .tag{color:var(--amber)} .route.t .tag{color:var(--indigo)}
+  .route h3{font-size:20px;font-weight:700;margin-bottom:8px}
+  .formula{font-family:"SF Mono",Consolas,Monaco,monospace;font-size:15px;background:rgba(0,0,0,.05);
+    display:inline-block;padding:4px 12px;border-radius:6px;font-weight:600}
+  .route .bd{padding:18px 22px 22px}
+  .row{display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;border-bottom:1px dashed var(--line);font-size:14px}
+  .row:last-child{border:0}
+  .row .k{color:var(--ink-2)}
+  .row .v{font-weight:600;text-align:right}
+  .v.yes{color:var(--green)} .v.no{color:var(--red)}
+
+  .note{margin-top:16px;padding:13px 15px;border-radius:9px;font-size:13.5px;line-height:1.65}
+  .note.warn{background:var(--red-bg);border-left:3px solid var(--red);color:#7f1d1d}
+  .note.good{background:var(--green-bg);border-left:3px solid var(--green);color:#065f46}
+  .note.info{background:var(--amber-bg);border-left:3px solid var(--amber);color:#78350f}
+
+  /* ---------- bar chart ---------- */
+  .chart{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px 28px}
+  .bars{display:flex;flex-direction:column;gap:15px;margin-top:8px}
+  .bgroup{display:grid;grid-template-columns:150px 1fr 82px;align-items:center;gap:14px}
+  .blabel{font-size:13.5px;color:var(--ink-2);text-align:right}
+  .btrack{background:#eef0f3;border-radius:6px;height:26px;position:relative;overflow:hidden}
+  .bfill{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;
+    padding-right:10px;color:#fff;font-size:12px;font-weight:700}
+  .bfill.s{background:linear-gradient(90deg,#f59e0b,#d97706)}
+  .bfill.t{background:linear-gradient(90deg,#818cf8,#4f46e5)}
+  .bval{font-size:15px;font-weight:700}
+  .legend{display:flex;gap:22px;justify-content:center;margin:22px 0 6px;font-size:13px;color:var(--ink-2)}
+  .dot{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:middle}
+  .dot.s{background:#d97706} .dot.t{background:#4f46e5}
+  .src{font-size:12px;color:var(--ink-3);text-align:center;margin-top:14px}
+
+  /* ---------- radar ---------- */
+  .radar-wrap{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;
+    display:flex;align-items:center;justify-content:center}
+  svg{max-width:100%;height:auto}
+  .ax-lbl{font-size:12.5px;fill:var(--ink-2);font-weight:600}
+  .ring-lbl{font-size:9.5px;fill:var(--ink-3)}
+
+  /* ---------- tables ---------- */
+  .tbl-wrap{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th{background:#f9fafb;text-align:left;padding:13px 18px;font-weight:600;color:var(--ink-2);
+    border-bottom:1px solid var(--line-2);white-space:nowrap;font-size:13px}
+  td{padding:12px 18px;border-bottom:1px solid var(--line)}
+  tr:last-child td{border-bottom:0}
+  tbody tr:hover{background:#fafbfc}
+  td.num{font-variant-numeric:tabular-nums;font-weight:600}
+  .hl{background:var(--green-bg)!important}
+  .hl td{font-weight:700}
+  .mul{color:var(--red);font-weight:700}
+
+  /* ---------- compare grid ---------- */
+  .cmp{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+  .panel h4{font-size:16px;font-weight:700;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+  .panel ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+  .panel li{font-size:13.5px;color:var(--ink-2);padding-left:20px;position:relative;line-height:1.6}
+  .panel li::before{content:"▸";position:absolute;left:2px;color:var(--blue);font-weight:700}
+  .panel.warnbox{border-color:#fecaca}
+  .panel.warnbox h4{color:var(--red);border-color:#fecaca}
+  .panel.warnbox li::before{content:"⚠";color:var(--red);font-size:11px;top:3px}
+
+  /* ---------- 60 pts ---------- */
+  .six{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .chip{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--blue);
+    border-radius:10px;padding:15px 17px}
+  .chip .t{font-size:14.5px;font-weight:700;margin-bottom:4px}
+  .chip .p{font-size:13px;font-weight:700;color:var(--blue);margin-bottom:7px}
+  .chip .d{font-size:12.5px;color:var(--ink-3);line-height:1.55}
+
+  /* ---------- todo ---------- */
+  .todo{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px 0}
+  .todo-item{display:flex;gap:14px;align-items:flex-start;padding:14px 24px;border-bottom:1px solid var(--line)}
+  .todo-item:last-child{border-bottom:0}
+  .todo-item .no{flex:0 0 26px;height:26px;border-radius:50%;background:#f3f4f6;color:var(--ink-2);
+    font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .todo-item .tx{flex:1;font-size:14px;color:var(--ink)}
+  .todo-item .tx small{display:block;color:var(--ink-3);font-size:12.5px;margin-top:3px}
+  .badge{flex:0 0 auto;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;margin-top:2px}
+  .badge.r{background:var(--red-bg);color:var(--red)}
+  .badge.o{background:var(--amber-bg);color:var(--amber)}
+  .badge.y{background:#f3f4f6;color:var(--ink-2)}
+
+  /* ---------- verdict ---------- */
+  .verdict{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;border-radius:14px;
+    padding:28px 32px;margin-top:26px}
+  .verdict h3{font-size:19px;font-weight:700;margin-bottom:14px}
+  .verdict p{font-size:14.5px;line-height:1.75;opacity:.95;margin-bottom:10px}
+  .verdict p:last-child{margin-bottom:0}
+  .verdict strong{background:rgba(255,255,255,.18);padding:1px 7px;border-radius:4px}
+
+  footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--line-2);
+    font-size:12.5px;color:var(--ink-3);text-align:center}
+
+  @media (max-width:900px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .routes,.cmp{grid-template-columns:1fr}
+    .six{grid-template-columns:1fr}
+    .bgroup{grid-template-columns:110px 1fr 70px}
+  }
+</style>
+</head>
+<body data-page-node-id="giqkfRZqcX0EQ2wyhZFy5O">
+<div class="wrap" data-page-node-id="1CalOGpRjOJcTtrxkUJAva">
+
+  <header data-page-node-id="6UG0nNxpe4hRHrYUImT2Xa">
+    <div class="eyebrow" data-page-node-id="Nkgy5EXKrDHHS9kJf2Mzj5">华南理工大学 · 机器人未来创新实验室</div>
+    <h1 data-page-node-id="oCNOCRfqL7K9PwQZuD9AIK">RoboMini 机甲杯 2027 · 路线对比看板</h1>
+    <p class="sub" data-page-node-id="qR5cRSsZpjtYpUp9nJqJn8">红蓝两队同场 <b data-page-node-id="NI9AzDQHaWJiKgQ3PYLNxo">7 分钟</b> · 1 台拾取车 + 至多 1 台固定发射架 · 场地 <b data-page-node-id="fMM1XlThlzZbipBXgw3yhu">5000 × 4500 mm</b></p>
+  </header>
+
+  <div class="stats" data-page-node-id="S1Hk3ki2cN1HroOPjRAdeQ">
+    <div class="stat" data-page-node-id="IBzIXinpQ4MDVFDeU7XwA6"><div class="n" data-page-node-id="85DCDwORJIK4Q4yVOjkxPd">7<span style="font-size:15px" data-page-node-id="tPjdHLTBFpDQLTWQYjoh66">min</span></div><div class="l" data-page-node-id="eTsDyHCKaPVDcxl17OhxMU">单场时长</div></div>
+    <div class="stat" data-page-node-id="bq1vbqxBxrhB4XNgSHuLA4"><div class="n" data-page-node-id="NIaxHA4Snfi0Wg4GWpHNBr">14</div><div class="l" data-page-node-id="iTNMIWedI3AQyl99g3848G">资源总数（件）</div></div>
+    <div class="stat a" data-page-node-id="jnCAiG3u6EDgtEKTmYro4j"><div class="n" data-page-node-id="ShOoafPY8L3yMGVirmESjc">900</div><div class="l" data-page-node-id="2UA32es2VAEvZDYXxgx1GI">分数优先上限</div></div>
+    <div class="stat b" data-page-node-id="V4HJiO4XMyBJIKqHtiPqeN"><div class="n" data-page-node-id="zhaITNSkB5DxDBKxEsMPmb">1400+</div><div class="l" data-page-node-id="E62uctAhXs14FLWsMTt8lP">弹丸优先上限</div></div>
+    <div class="stat r" data-page-node-id="XgEjQGW3pTgYMViqac7EDU"><div class="n" data-page-node-id="go4RZnOhm0gIFt6qF2Q8kN">100</div><div class="l" data-page-node-id="8WHyR6o7ckXCIQ6AI07qG5">硬件加分上限</div></div>
+  </div>
+
+  <!-- ================= 两条路线 ================= -->
+  <h2 data-page-node-id="kvpURHxcMQxVCo7fygpcV5">两条得分路线</h2>
+  <p class="lead" data-page-node-id="o87WIkC3ekiWxXPSsQCQak">赛前向裁判申报，<b data-page-node-id="BM9HfoxFRJII2OQgQJTPQ8">本场不得变更</b>。E＝兑换价值　H＝硬件加分　T＝命中得分　P＝扣分</p>
+
+  <div class="routes" data-page-node-id="0KWtP8xIEvuwdmjIH08GO0">
+    <div class="route s" data-page-node-id="lDVZz1uJcG4IbXPGtfTZb1">
+      <div class="hd" data-page-node-id="JUrjXvfmKOKvQKamLXF2gZ">
+        <div class="tag" data-page-node-id="6esHR2MZBxRkOlD8Di0ie0">Route A</div>
+        <h3 data-page-node-id="vPPJgioUO5FTsgSPHzpZ5i">分数优先</h3>
+        <span class="formula" data-page-node-id="6vhDFMNvz1skQ5kz3up1Zp">S = E + H − P</span>
+      </div>
+      <div class="bd" data-page-node-id="xnIE5U6P3Da3B56aCyyzN2">
+        <div class="row" data-page-node-id="t0KF4Fk7xeOCpQQh5Iuop9"><span class="k" data-page-node-id="z938x3pbgyA7vQGRASA6Hv">兑换价值 E</span><span class="v yes" data-page-node-id="sxxJ686sJwKYhnHybFOedB">直接计入总分</span></div>
+        <div class="row" data-page-node-id="WQy0DxA1Xo5c17HT0ZGD6w"><span class="k" data-page-node-id="CDIX7ZoiPRtepl3NKjKDaB">硬件加分 H</span><span class="v yes" data-page-node-id="FchQw0Fx5SVRPbcnuOYXg5">直接计入总分</span></div>
+        <div class="row" data-page-node-id="ZH53DFrFArWe6Q5M9S0REi"><span class="k" data-page-node-id="HvoMN0yF2LAimDqldJCc67">弹丸获取</span><span class="v no" data-page-node-id="R0xSE4zPhRdyBQ0ZBVt4FU">不获得弹丸</span></div>
+        <div class="row" data-page-node-id="GY3HFpQcE3bH7RdIPaXNgA"><span class="k" data-page-node-id="1UumcjolpgKxOBV6avwXBE">是否必须打靶</span><span class="v" data-page-node-id="6olni302JIrjFBDAp6UNW8">否（也打不了）</span></div>
+        <div class="row" data-page-node-id="weKFQ4Bb27WDmZ7WSL44Eq"><span class="k" data-page-node-id="Pp5xo9J5TxlkINoslFN0aJ">得分确定性</span><span class="v yes" data-page-node-id="2yCrtGueMItm0je8eu32AA">高（捡到即兑换）</span></div>
+        <div class="row" data-page-node-id="1Fa5DiU0a0nRnAA193bAeq"><span class="k" data-page-node-id="0vgGDF61JEFiWgsxL6cVtP">分数上限</span><span class="v" data-page-node-id="rVby09upht3HMA8G7ktLnm">≈ 900</span></div>
+        <div class="note good" data-page-node-id="C8JzmwxOw3o6ITJ2Jh9XHl">
+          <b data-page-node-id="tx0yO2hNvh4qB1TSroBFJY">优势</b>：收益确定、容错高、不受命中率影响、上手快。<br data-page-node-id="U6HCmYuZvlt4nyvWYcFnG7">
+          <b data-page-node-id="Zv6m9uDBCfFlKWMVUC8BIf">适合</b>：全队零基础、机械能力弱、时间紧。
+        </div>
+        <div class="note warn" data-page-node-id="HezhPqHiiL9XuiudApv3Mo">
+          <b data-page-node-id="JFLJu2Lep0faypuNUDyjo6">致命短板</b>：拿不到弹丸 ⇒ 打靶指标全为 0。<br data-page-node-id="5Jhj7Y3PPNClCIhbKFcalp">
+          一旦与对手<b data-page-node-id="VgDcehSRtTW0QljUWUQObQ">总分打平</b>，同分判定前 4 项（全是打靶指标）你必然落后 ⇒ <b data-page-node-id="pCPplxpkRv7fxkYNdG71Ku">平局即判负</b>。
+        </div>
+      </div>
+    </div>
+
+    <div class="route t" data-page-node-id="2K633WdDXONiQffGrWDTAS">
+      <div class="hd" data-page-node-id="ot68w8lpTDnKlxbAhBitbv">
+        <div class="tag" data-page-node-id="xEPChv1iBCEH7Uc1DtNJ1J">Route B</div>
+        <h3 data-page-node-id="Os5fmdbvpkcx3gBTV7o4Bc">弹丸优先</h3>
+        <span class="formula" data-page-node-id="sEBNi3Ue3asfZ3EDnl9f5a">S = T − P　（E + H → 10分/颗）</span>
+      </div>
+      <div class="bd" data-page-node-id="axELGdsm9YTqztHFCwr9Sz">
+        <div class="row" data-page-node-id="GtLkNWYVBvCIpaPBFrKDa7"><span class="k" data-page-node-id="wvIlhNBGCzkmcECACDqvTE">兑换价值 E</span><span class="v no" data-page-node-id="PA6OKso5edIlO2yl1ATqrZ">仅换弹丸，不进总分</span></div>
+        <div class="row" data-page-node-id="tQfGadfcmbUOgoSSL6kMFH"><span class="k" data-page-node-id="u3VAOt0iTwsnAnEvTM7r6w">硬件加分 H</span><span class="v no" data-page-node-id="4mA95HHkXaBmBsRzV8cVLE">仅换弹丸，不进总分</span></div>
+        <div class="row" data-page-node-id="xMlIKGqHidMfvwygfB3JyD"><span class="k" data-page-node-id="Br8JNkrerdrF9GqlTkgpbh">弹丸获取</span><span class="v yes" data-page-node-id="HTXMjxPBBzWi8RebRqhty2">10 分 = 1 颗</span></div>
+        <div class="row" data-page-node-id="CRH9cPnGxZyblhX6gW5os9"><span class="k" data-page-node-id="gCi4rOzYvh5GqCJnlW0egy">是否必须打靶</span><span class="v no" data-page-node-id="s4hAHtAqxmHuplrdtrF9cb">是（唯一得分手段）</span></div>
+        <div class="row" data-page-node-id="buFaUmn95LerSFjOeEc31d"><span class="k" data-page-node-id="WdfFL4U2KpgHzQN9YRzjB3">得分确定性</span><span class="v no" data-page-node-id="wY9DZl8ZdwfpJaKiz10qPv">低（完全依赖命中率）</span></div>
+        <div class="row" data-page-node-id="uoKOJ6u4ORMA45cSmtkJQ3"><span class="k" data-page-node-id="D1DdJ7MEi3yv6sPBeR7poC">分数上限</span><span class="v" data-page-node-id="BURgwDJFDB8Ma3NzTQXfwN">≈ 1400+</span></div>
+        <div class="note good" data-page-node-id="yhkLvMNEIxziDGvXPA9JkX">
+          <b data-page-node-id="6O3dTiFozogMpmbMtLfpnQ">优势</b>：自主模式分值＝人工的 <b data-page-node-id="U5qE6PfGdXlHDzFIY0UXOo">2 倍</b>；同时兑换 ×2 让球数翻倍 ⇒ 上限极高。
+          同分时只要命中过任意一发，几乎必胜。
+        </div>
+        <div class="note warn" data-page-node-id="q8dUL7kU2734E40E9RcuyX">
+          <b data-page-node-id="j29kpHcXcET9kGR3AmlbSz">致命短板</b>：自主系统现场失效 ⇒ 本场<b data-page-node-id="7LLDetdB57hupxp4T4GtOX">只能人工</b>、分数腰斩，且规则明确
+          <b data-page-node-id="lxWcekJ1cc7DiBNR4Io8GN">「本场不得恢复自主」</b>。零命中 = 零分。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 分值对比 ================= -->
+  <h2 data-page-node-id="BCIbyhYCW9a2IBIkIeqGy3">分值上限对比（按大一队伍现实能力分档估算）</h2>
+  <p class="lead" data-page-node-id="H1ywPFBww74zBTBNW4Hysv">球数 =（E + H）÷ 10；弹丸优先按「固定靶 5 发 + 随机固定靶 5 发 + 剩余球打大能量机关，命中率 50%」估算</p>
+
+  <div class="chart" data-page-node-id="b3srCRN8xKCxcoRVN4uGm2">
+    <div class="legend" data-page-node-id="rdXAbHtF7R20aFXwYBsS6F">
+      <span data-page-node-id="mMLEFdeVcpj1QEKjoDfN3D"><i class="dot s" data-page-node-id="tC2yMZaysWRBwUjOTbWyit"></i>分数优先（E + H）</span>
+      <span data-page-node-id="wGwWU8DfSHngBLaZcKVM7Q"><i class="dot t" data-page-node-id="HiX61I5t7drqyC47PXroJV"></i>弹丸优先·自主（T，r=50%）</span>
+    </div>
+    <div class="bars" data-page-node-id="Ibt1KTKrLLYkHaiXzwzQdg">
+      <div class="bgroup" data-page-node-id="ZHGh72HJCy5YXDsN4qcSh5">
+        <div class="blabel" data-page-node-id="Dw2dhCjaVl1i8jp9Sif4yc">保守<br data-page-node-id="LYuC2Fn7gomcypBYo9wcBp"><small data-page-node-id="cCH8OjGA3C2OKAKXOevIB9">只捡方块</small></div>
+        <div class="btrack" data-page-node-id="WJn2k1k5O5vn0B0TyLTSEw"><div class="bfill s" style="width:18.6%" data-page-node-id="G5uMOeMpOqvMCfC8HhaNGo">260</div></div>
+        <div class="bval" style="color:var(--indigo)" data-page-node-id="TMrno4eEUfY65526Fjkvpz">830</div>
+      </div>
+      <div class="bgroup" data-page-node-id="Q7IpW2Emx836TfjkqBPZCE">
+        <div class="blabel" data-page-node-id="1YKetRDH9EGixLqjbJJbHA">中等<br data-page-node-id="VvIneGevPNCapinFMNmmO6"><small data-page-node-id="Aw7Yy9JUTnfGI7nXwOHCAi">+ 同时兑换</small></div>
+        <div class="btrack" data-page-node-id="iIwvSMtxPJBX06teAeAmVT"><div class="bfill s" style="width:34.3%" data-page-node-id="2FEmJmWLIACZoinAN4gVET">480</div></div>
+        <div class="bval" style="color:var(--indigo)" data-page-node-id="rg8B9ib40ghB4d0fGQL37B">1790</div>
+      </div>
+      <div class="bgroup" data-page-node-id="xatU2pjphP0Qqz4GSMPeka">
+        <div class="blabel" data-page-node-id="5jyENdi1nsb7p4CAOZvmUb">乐观<br data-page-node-id="iAqh3HfTiKHDik1Q9tmRWE"><small data-page-node-id="QWxWdyKpOATyDewwUaFJLJ">+ 能量单元</small></div>
+        <div class="btrack" data-page-node-id="RIGsjh2NTfS4SqvabMn9G0"><div class="bfill s" style="width:50%" data-page-node-id="eBJQMURrbrBZDn9WWPn17n">700</div></div>
+        <div class="bval" style="color:var(--indigo)" data-page-node-id="kBuzWXQSxFtdXct14aPAPL">2710</div>
+      </div>
+      <div class="bgroup" data-page-node-id="lpznwaZUyoHpRfUr7lstR3">
+        <div class="blabel" data-page-node-id="PcG8prE6KTkXUxcoQLW474">理论极限</div>
+        <div class="btrack" data-page-node-id="8zbDFXzxKJHt3e0Hwd959K"><div class="bfill s" style="width:64.3%" data-page-node-id="AIpnqRuVxm2iI2PIRYaL39">900</div></div>
+        <div class="bval" style="color:var(--ink-3)" data-page-node-id="Z8tDLSohb0SVIMJX5nFFqq">—</div>
+      </div>
+    </div>
+    <p class="src" data-page-node-id="eoSjTTnd453JuCvkXzOXak">※ 弹丸优先数值为「数量级参考」，实际受命中率、球数、阶段推进速度强烈影响；命中率归零则总分归零。</p>
+  </div>
+
+  <!-- ================= 雷达 ================= -->
+  <h2 data-page-node-id="LbSj1imyl7kEsWTrfz9e15">难度七维对比</h2>
+  <p class="lead" data-page-node-id="krrtEnNWHIFZHp7SS064ky">外圈＝难度越高（5 分制）。两条路线的难点<b data-page-node-id="Nravh4TaaeApuVLkMGDPzn">不在一个方向</b>——这决定了分工</p>
+
+  <div class="radar-wrap" data-page-node-id="DiPcjWd2DHkV9qZWjFKxvp">
+    <svg viewBox="0 0 620 400" width="620" height="400" role="img" aria-label="两条路线难度雷达对比图" data-page-node-id="w1KRnqOyqDU4BGT5VKNYZT">
+      <g id="grid" data-page-node-id="WsDMoUkaQfyHAhVUt5Ff8h"></g>
+      <g id="axes" data-page-node-id="rXm6WZdB9nDAUa5892MkjN"></g>
+      <polygon id="polyS" fill="rgba(217,119,6,.16)" stroke="#d97706" stroke-width="2.5" stroke-linejoin="round" data-page-node-id="lIIO5bEijhN3AyvBltxhxg"></polygon>
+      <polygon id="polyT" fill="rgba(79,70,229,.16)" stroke="#4f46e5" stroke-width="2.5" stroke-linejoin="round" data-page-node-id="JrklUZ3At4rIYufUDNflvR"></polygon>
+      <g id="ptsS" data-page-node-id="COBWaWtf5H9E3HK3H5CNUc"></g>
+      <g id="ptsT" data-page-node-id="3ZQtS22WzFfaNTyMJRkCaK"></g>
+      <g id="labels" data-page-node-id="eTB23akjc8hSSWTMTMjeEX"></g>
+    </svg>
+  </div>
+
+  <div class="cmp" style="margin-top:20px" data-page-node-id="Jy4ZkvqElTe4lUquK7CGQ0">
+    <div class="panel" data-page-node-id="KD2Drcd4w4ndYT5FHHKGcG">
+      <h4 data-page-node-id="8rLqvlvnKWNZHlVqeWB3h8">分数优先 · 难点集中在机械</h4>
+      <ul data-page-node-id="sHOYEO9BrdN52zcbfsI29m">
+        <li data-page-node-id="UjUmpwsnRujorSrE7FWzqn">要爬 <b data-page-node-id="21eASjf9MSCBmtrVZ7ra1X">200 mm 二级平台</b>（30° 坡道），才能取到顶层能量单元</li>
+        <li data-page-node-id="POE67gI2SzeQdRg6iYnRWy">顶层是<b data-page-node-id="anvt8mA4FEs9g2NNjb7V9B">底盘禁区</b>——必须靠机械臂/抬升机构取物，不能开车上去</li>
+        <li data-page-node-id="Nn9IaP8ZRdEkFQCsx3Hsc6">取物<b data-page-node-id="4QEIMOYNUxYbxZEd3lUz2m">不得损坏机关及道具</b>，否则红牌</li>
+        <li data-page-node-id="h7WkJiTjmgBlWbNbpfbjzi">需要 <b data-page-node-id="P4m0RekhdLsZt4aBBzqWu9">7 分钟内多次往返</b>，路径规划与稳定性要求高</li>
+        <li data-page-node-id="IKvbjeDqPoS05vID56HpZa">「同时兑换」需双投放机构 + 1 秒内时序，是翻倍收益的关键</li>
+      </ul>
+    </div>
+    <div class="panel" data-page-node-id="HJtyYMkRzhW3u2GPPPxvjI">
+      <h4 data-page-node-id="TES80LDGpyQ0e1XDzi11dA">弹丸优先 · 难点集中在电控与算法</h4>
+      <ul data-page-node-id="4rCZtgUPYBjcJLZMy3ZdPp">
+        <li data-page-node-id="n7VmT67QbfGGgIxrCrJbSP"><b data-page-node-id="7mAn8Yx5y14C2Y1sDFbwLf">视觉识别</b>：找「四灯全亮」的待激活靶（红/蓝分色）</li>
+        <li data-page-node-id="DIJxiWvPK1N6x2tj8DUFA6"><b data-page-node-id="7w9fbH2efHMmAzaik2fKYU">运动目标提前量</b>：靶在转，必须预测，不能对准了再打</li>
+        <li data-page-node-id="0Y45lnYu7J4btwOuFzaFkk"><b data-page-node-id="gKp7oPRJxEqswlOEJIIifv">系统辨识</b>：大能量机关的 a、ω、相位赛前未知，需在线辨识</li>
+        <li data-page-node-id="6672yzO6ANu6rot9cfgHnq"><b data-page-node-id="tZDUTi4fyHY7cH1N5hR0Iz">弹道一致性</b>：乒乓球轻，受自转/气流影响大，散布难控</li>
+        <li data-page-node-id="i0MhvwvtRHJcMdZ5VsJZRn"><b data-page-node-id="IVVrWZxab6DHD4EwhRlkeb">硬件工作量翻倍</b>：摩擦轮 + 供弹 + 云台 + 算力平台供电</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ================= 兑换表 ================= -->
+  <h2 data-page-node-id="iltJ16uV3RLhMwJqqFitVI">兑换价值速查表</h2>
+  <p class="lead" data-page-node-id="IZz9N5PIHwU3z93bc5vFeg">⭐ 全场最大杠杆之一：<b data-page-node-id="xDmVPixkYDdo6FWiWdlVe2">同时兑换让收益与球数直接翻倍</b></p>
+
+  <div class="tbl-wrap" data-page-node-id="82bsjJhDmORBxgzayi5CCj">
+    <table data-page-node-id="sCHpiOv0wvKccb6XGpotYY">
+      <thead data-page-node-id="kpPNTbYmQazjaBKwhStpyb"><tr data-page-node-id="91eRPXBROK8zglUEfaHeaK">
+        <th data-page-node-id="Z7PBCFQ4HjAurALBcz66uG">有效兑换组合</th><th style="text-align:right" data-page-node-id="LeJ3kCKG3zwHMTifPPHDvX">基础价值</th><th style="text-align:right" data-page-node-id="zXSqg0eW2ur9fxVBh2imOc">倍率</th>
+        <th style="text-align:right" data-page-node-id="nhvCQ69t7x5EHLIRhpQlUe">分数优先得分</th><th style="text-align:right" data-page-node-id="d1qwAorevoIEA5InXCyDKB">弹丸优先换球数</th>
+      </tr></thead>
+      <tbody data-page-node-id="H8RtRqmMz1c5Cg8lIFXbzO">
+        <tr data-page-node-id="dlNNnF6YvhK7qxLNXhSpCr"><td data-page-node-id="z9n9SZBFO6z6gtGlfVflrw">1 个方块</td><td class="num" style="text-align:right" data-page-node-id="RbsZ04ZGi34iINXyuJ2Qyq">20</td><td style="text-align:right" data-page-node-id="23NKVtAAwTGYXNc8BXUuGO">×1</td><td class="num" style="text-align:right" data-page-node-id="PA65TsIWzDxESMVYwLVyVB">20</td><td class="num" style="text-align:right" data-page-node-id="ZQHCNLfaMVYzb3j9R8Bkcf">2</td></tr>
+        <tr data-page-node-id="2aT6kkFhzQVHJUTV6LaU0L"><td data-page-node-id="o8hzjDfTMXCy3rTNmELtPm">2 个方块 <b data-page-node-id="K9zAylLhrl2qwc6YdNDMvM">同时</b>兑换</td><td class="num" style="text-align:right" data-page-node-id="YmRmHX9fGm3oHhEG36zDcG">40</td><td style="text-align:right" data-page-node-id="fR4PYn6QoYSApDR4YiOlRP"><span class="mul" data-page-node-id="EeF91Ng5n7EZz5Mc1RaOco">×2</span></td><td class="num" style="text-align:right" data-page-node-id="Ffdiz5tT5MCZ4V759CAB7H">80</td><td class="num" style="text-align:right" data-page-node-id="UMR8HbpkeXTO0f2aN8QU5U">8</td></tr>
+        <tr data-page-node-id="ItlXde1FzpmCRH29x2N8oQ"><td data-page-node-id="wEZ4XQ7Q8NsZOy5Oqu1Can">1 个能量单元</td><td class="num" style="text-align:right" data-page-node-id="HIV0U5BuOFIrvvWxnFEYCI">50</td><td style="text-align:right" data-page-node-id="F8wCgTlfAELcR0QHUAVGeR">×1</td><td class="num" style="text-align:right" data-page-node-id="DvaxvAdMwGlXlGScE30eoR">50</td><td class="num" style="text-align:right" data-page-node-id="wmdF5V9S9STECphTcVCHQ6">5</td></tr>
+        <tr class="hl" data-page-node-id="KjeppR8S3d0EBB9r4LRcAd"><td data-page-node-id="6Ao6SKZJEDJYKoMGeyDaNt">2 个能量单元 <b data-page-node-id="MPAwDbzwu3rr0aHOGwruAG">同时</b>兑换</td><td class="num" style="text-align:right" data-page-node-id="3UudfTLsVCgxCU8yoiGoJc">100</td><td style="text-align:right" data-page-node-id="cmBOMimqVERAD5RgKs6P3u"><span class="mul" data-page-node-id="2T1LCPB8PQgtFPrqiasEHt">×2</span></td><td class="num" style="text-align:right" data-page-node-id="NbCQ1JnOlR4VaHE0J4eGZ2">200</td><td class="num" style="text-align:right" data-page-node-id="0fFssO2CdtWs1EK4Cn4itr">20</td></tr>
+        <tr data-page-node-id="g6YXVtzdq4XSFsc4GOH3xk"><td data-page-node-id="QwEgBUATzknwo0CEK0NFVT">1 方块 + 1 能量单元 <b data-page-node-id="qDvGppS0rAGAzEDZzwsfIT">同时</b>兑换</td><td class="num" style="text-align:right" data-page-node-id="p8D39iC7HweGonb1WHcDJy">70</td><td style="text-align:right" data-page-node-id="XHlpoQkE6PBF7WS4iVs7Ml"><span class="mul" data-page-node-id="41DfQB4KGTDb081CwDrGgI">×2</span></td><td class="num" style="text-align:right" data-page-node-id="eLwdaogiFzIpKSAYwJ2P1J">140</td><td class="num" style="text-align:right" data-page-node-id="CO1WmXT2P0HIbRMKejhEIW">14</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note info" style="margin-top:18px" data-page-node-id="8Z0Yzo7QeH61nUGcF7fCbX">
+    <b data-page-node-id="ac0RvE10RsWm4oWdWfyTEs">同时兑换成立三条件（缺一即退回基础价值分别结算）</b><br data-page-node-id="qDSnS2wD23ImrnlDt6F0HX">
+    ① 两个物品分别经<b data-page-node-id="BpYODhxcAvvXdQByY83u9D">两个不同孔</b>投入　② 时间差 <b data-page-node-id="VaxwuXl5aQPQRtLkF6M9b1">≤ 1 秒</b>　③ 可为同类，或 1 方块 + 1 能量单元<br data-page-node-id="IsJHjepFc9p2ImJINPEHEi">
+    ⚠️ 典型翻车：两个物品走了<b data-page-node-id="EDAiJMx3DsBSqWEaGdO0oJ">同一个孔</b>；或时间差<b data-page-node-id="vIlUBsIVERELPffl7CFYA2">超过 1 秒</b>。
+  </div>
+
+  <!-- ================= 打靶表 ================= -->
+  <h2 data-page-node-id="g5ng6I7Bf7nP5GuiVy7rWA">四种打靶模式与分值</h2>
+  <p class="lead" data-page-node-id="D0E9UW3YL6NWJjden2pjkW">⭐ <b data-page-node-id="4pMizozLqB5eaT6fGibhDo">自主模式分值＝人工的 2 倍</b>——这是弹丸优先路线的核心杠杆</p>
+
+  <div class="tbl-wrap" data-page-node-id="FxetNHNiV3ZuIQJelL2uT1">
+    <table data-page-node-id="OYupDKwMmSWC0dSTp0YX3p">
+      <thead data-page-node-id="4YCiSbzdU0FcHm275FCoBv"><tr data-page-node-id="1P5biP9SYlgpq2bZkS0XHr">
+        <th data-page-node-id="7dOLO7fAC4CCL1YtHdSSpF">模式</th><th data-page-node-id="Q55MFw8B2AU9KILAoIBsID">旋转方式</th><th data-page-node-id="CVBIBK2PUlKDasZ3G4eu4M">灯板切换</th>
+        <th style="text-align:right" data-page-node-id="4a66dQLwlCgw6iYAewTOGu">人工</th><th style="text-align:right" data-page-node-id="rm8atpiNtmT0GpULZw0WHy">自主</th>
+      </tr></thead>
+      <tbody data-page-node-id="Xjr5aXketolz3Xw5SjlkOE">
+        <tr data-page-node-id="0NQ1aBRWVoqNu4HSLCVOJo"><td data-page-node-id="zlrroZHHRydGOGU5f6BgGh"><b data-page-node-id="ElPzVSXeCky6gMPAy6cDhD">固定靶</b></td><td data-page-node-id="LoBL4toJdOi3NodxgiiW19">不旋转</td><td data-page-node-id="Sas1j12CyfibRqtZDd8KPC">待激活靶持续显示；命中后随机换下一个</td><td class="num" style="text-align:right" data-page-node-id="KOSmyaXIyuJIgOcxccgU5n">15</td><td class="num" style="text-align:right" data-page-node-id="n3BTGLXHUhzNCtTl9nGgxU">30</td></tr>
+        <tr data-page-node-id="2vKqbPVUoLotLmLfqbqvZl"><td data-page-node-id="kcIO3nbpB5CQfnLmyxQTHj"><b data-page-node-id="kBxXQLTuOhXXuyBYZqC45d">随机固定靶</b></td><td data-page-node-id="zICB4xWi3WAvOifBLtDfBo">不旋转</td><td data-page-node-id="hjYtE890jlVdXCJza0lbBz">显示 3 秒后切换；命中后换下一个</td><td class="num" style="text-align:right" data-page-node-id="xcmvg1LFOR7ahagiatfrLZ">20</td><td class="num" style="text-align:right" data-page-node-id="uOAxl1gTDKdu3UcXm35hBq">40</td></tr>
+        <tr data-page-node-id="JCzwraQzLu9hX2XH1BiCFV"><td data-page-node-id="owABNhLpT6FyhI014zg7UG"><b data-page-node-id="AEEcS16bofIGmEasQ8JRAw">小能量机关</b></td><td data-page-node-id="4JwscjPikhcXtSBXlfLgYq">匀速 π/3 rad/s（≈1.047）</td><td data-page-node-id="GkDN9rL5va5but1aud5IOy">显示 3 秒后切换</td><td class="num" style="text-align:right" data-page-node-id="LfEdkwW1ImL9i7nQ9Nsr6m">25</td><td class="num" style="text-align:right" data-page-node-id="q9EyZlVEfIgDJFhmQXmnuP">50</td></tr>
+        <tr class="hl" data-page-node-id="klocwSE5ULCCzApCnHjHYi"><td data-page-node-id="mgRDfLp3JFiJHDVnPfycvT"><b data-page-node-id="nTIpBz0KgFfghBznu2lGfo">大能量机关</b></td><td data-page-node-id="RGiflRNiAo3NBJKXnD6Bc4">周期变速</td><td data-page-node-id="kTCrRaiBFfRcoGF8vWIK3s">显示 3 秒后切换</td><td class="num" style="text-align:right" data-page-node-id="D5EZCroNaZJWXM8p9c1rxH">30</td><td class="num" style="text-align:right" data-page-node-id="x1GIYkDsD5RQJSE8ylbIDP">60</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note warn" style="margin-top:18px" data-page-node-id="zxiiFDvuZP6Xfs0FPwIVrC">
+    <b data-page-node-id="bagz30WYtjodxQT8MP7AhQ">⚠️ 阶段限制：固定靶、随机固定靶每场各只能完成 1 次</b><br data-page-node-id="lBjF8UZid2T5M1IDJcMyuR">
+    推进顺序：① 固定靶（1 次）→ ② 随机固定靶（1 次）→ ③ 之后每轮任选小／大能量机关（可重复选同一种）<br data-page-node-id="MR7EbGWXt65dDtUlSyZoEM">
+    ⇒ 弹丸优先的主要得分来源必然是<b data-page-node-id="NUtNxMcnRP26ucaShwC849">能量机关阶段</b>，而能量机关是<b data-page-node-id="tDKCDMEdaAM7aUyZtxrAIt">旋转</b>的 ⇒ <b data-page-node-id="VAimjXLhPVPp8QDmo80Alx">运动目标提前量预测是硬门槛</b>，绕不过去。
+  </div>
+
+  <!-- ================= 大能量机关 ================= -->
+  <h2 data-page-node-id="EoTnrObcRHmbPRL6VYGtKg">大能量机关转速函数（自主打靶最难的一关）</h2>
+
+  <div class="radar-wrap" style="flex-direction:column;gap:18px" data-page-node-id="7EI8YUJSfkGElDQ1o1sRwr">
+    <div style="font-family:'SF Mono',Consolas,monospace;font-size:22px;font-weight:700;letter-spacing:.02em" data-page-node-id="CsKMUgD3r2L4QgiOi1AvYM">
+      spd(t) = a · sin(ωt) + b
+    </div>
+    <table style="width:auto;font-size:14px" data-page-node-id="NKTZIexsVsZmAd0JCswjTR">
+      <tbody data-page-node-id="StLASORXgsA7mRnhoe0jjZ">
+        <tr data-page-node-id="zXXGN3dms7FJTa3rGAq7iv"><td style="border:0;padding:6px 22px 6px 0;color:var(--ink-3)" data-page-node-id="wG2aNVxfRSjwOOqLsIAby1">b</td>
+            <td style="border:0;padding:6px 0;font-family:monospace;font-weight:600" data-page-node-id="yUc8ZkXOPCSNhLgPmHgT9W">b = 2.090 − a</td></tr>
+        <tr data-page-node-id="eS8W27rsEKe6CatpAtNdhl"><td style="border:0;padding:6px 22px 6px 0;color:var(--ink-3)" data-page-node-id="EuweMMrxTCqNBSwyWkWYPq">a</td>
+            <td style="border:0;padding:6px 0;font-family:monospace;font-weight:600" data-page-node-id="g3EXWSWeMiaqAfVib7A688">a ∈ [0.780, 1.045]</td></tr>
+        <tr data-page-node-id="aM8moQNo2SbTu1W0LlEcZk"><td style="border:0;padding:6px 22px 6px 0;color:var(--ink-3)" data-page-node-id="53BTChVzFHe49CK5c9Y3iJ">ω</td>
+            <td style="border:0;padding:6px 0;font-family:monospace;font-weight:600" data-page-node-id="nrkzu4GCENy0QUPdOpVQlV">ω ∈ [1.884, 2.000]</td></tr>
+        <tr data-page-node-id="tpQZysPppMwNJ0bxjk3Ekx"><td style="border:0;padding:6px 22px 6px 0;color:var(--ink-3)" data-page-node-id="gpAhoCnrdCllzYd8VbfXVW">单位</td>
+            <td style="border:0;padding:6px 0;font-family:monospace;font-weight:600" data-page-node-id="VvHayilf7E3U3eX0WWVrAf">spd: rad/s　t: s</td></tr>
+      </tbody>
+    </table>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;width:100%;max-width:560px" data-page-node-id="2TTTGd9cOPyhxZigGdMBqp">
+      <div class="chip" style="border-left-color:var(--indigo)" data-page-node-id="k45H9KSnCRBWBMT2CBpiXE"><div class="t" data-page-node-id="U5pH8O5Xahcni4fmsIfSJ3">转速上限</div><div class="p" data-page-node-id="BPrGb2VyUWxBYKHOWSC5cr">2.090 rad/s</div><div class="d" data-page-node-id="WjjDp05Qn2rfOp9PsYcjin">恒定</div></div>
+      <div class="chip" style="border-left-color:var(--indigo)" data-page-node-id="ybEACm5gYOaCLq2qddxUjM"><div class="t" data-page-node-id="fYTORJw9QZFMNNHKAQ3nEq">转速下限</div><div class="p" data-page-node-id="cj0ErPD43odBLtcSvjHHyK">0 ～ 0.53</div><div class="d" data-page-node-id="CLRMTpzuyaesDSoqyVteNB">随 a 变化</div></div>
+      <div class="chip" style="border-left-color:var(--indigo)" data-page-node-id="Le74fRFUSH73G5pmau32do"><div class="t" data-page-node-id="wubxZFZu75LkOp2ognf2nj">周期</div><div class="p" data-page-node-id="VpKIpHYLqsSVwfN2AwnrN8">≈ 3.14～3.34 s</div><div class="d" data-page-node-id="8efTTRRqOQrpzsqz0L79qp">2π/ω</div></div>
+      <div class="chip" style="border-left-color:var(--red)" data-page-node-id="KtvUXev3RyBTE51dLgJrEj"><div class="t" data-page-node-id="YIcbd1011nCZ5KMpF5HGKl">时间误差</div><div class="p" data-page-node-id="uVAySdUwKfXpqn3ihUkv7l">≤ 500 ms</div><div class="d" data-page-node-id="DflJ2GmENTulfmjbr9Tk84">实际 vs 目标</div></div>
+    </div>
+    <p style="font-size:14px;color:var(--ink-2);max-width:620px;text-align:center" data-page-node-id="9VDuqSBgcDn6ro1LCUCRdr">
+      规则原文明确写着「<b data-page-node-id="XIKD9NH6AxbarJ1n5ZGmt7">自主打靶需在线辨识 a、ω 和相位</b>」——
+      参数只给了区间，赛前未知 ⇒ 必须做系统辨识 / 卡尔曼滤波 / 在线最小二乘拟合。
+    </p>
+  </div>
+
+  <!-- ================= 电硬 ================= -->
+  <h2 data-page-node-id="k52xEaXHwthrLYALG0CtOm">电控硬件专项分析 · 你的战场</h2>
+  <p class="lead" data-page-node-id="tULWU3hsw5EzVNpqPGo9il">硬件加分是全场<b data-page-node-id="c8DBWV6u4FasVkuDpoAlmH">唯一不与对手对抗、不靠运气、不受 7 分钟时限影响</b>的确定性收益</p>
+
+  <h4 style="font-size:16px;font-weight:700;margin:24px 0 12px" data-page-node-id="1e9xgDfjqKHNI7eB3Hluj8">主控模块 60 分 · 逐项拆解</h4>
+  <div class="six" data-page-node-id="U7iOZGuK701dtCSGnpdwB2">
+    <div class="chip" data-page-node-id="AJvwfE9b5RP06YVQ0bNl2V"><div class="t" data-page-node-id="7tUoB6FhItkiYOizf3GOw3">① 单片机最小系统</div><div class="p" data-page-node-id="AXv7tJxOaXbN73Iep1GcMp">+10</div>
+      <div class="d" data-page-node-id="5NtyyBcbgrpQEJwj2Km4Mm">MCU、晶振、复位、BOOT、SWD 下载口、去耦电容、电源滤波<br data-page-node-id="oJvDDLGwzw6jXL6vwK2rPH"><b data-page-node-id="tTgwL7oPfDq1oQaginctJB">验收</b>：能下载、能跑、能复位</div></div>
+    <div class="chip" data-page-node-id="Hj9URkQndDEko46juLljzD"><div class="t" data-page-node-id="JCNEVDTRcgGabLjKwu18uS">② DCDC／LDO 电源</div><div class="p" data-page-node-id="zb64w1JEcmzU2Uo8qdLd43">+10</div>
+      <div class="d" data-page-node-id="Rmi92vQqOn94oqJ5zKAgpR">多路电源树（电池→5V→3.3V）、功率核算、散热<br data-page-node-id="EpojVheP031NL4SlKKcO6B"><b data-page-node-id="yptl4i8LpEDwDuoP1jxlZy">验收</b>：带载不跌落</div></div>
+    <div class="chip" data-page-node-id="nMIBZ4zOgv4gHxr0wF8DP6"><div class="t" data-page-node-id="vSn1calC6QpW3QZRQaSTxw">③ 板上外设</div><div class="p" data-page-node-id="seDNgTvxWF96Eu3y6FabZH">+10</div>
+      <div class="d" data-page-node-id="FLzUNahalXGruGu1d1VuhT">IMU、CAN 收发器、串口、ADC 采样、LED、蜂鸣器、按键<br data-page-node-id="rEHmY4FJMdQ4mU8vh9RLK2"><b data-page-node-id="40NGhy0I38Um8KTdxlzbGz">验收</b>：每个都能演示</div></div>
+    <div class="chip" data-page-node-id="AktQreLR67VJ8n6Rr5AgdV"><div class="t" data-page-node-id="zt9f1xGsicdtdL52fql6Ba">④ 保护电路</div><div class="p" data-page-node-id="jPCqtM2Dt4HioYMW4g8yXR">+10</div>
+      <div class="d" data-page-node-id="yo3ijRnuKqoQ3YNYLBcqiE">反接保护、过流、过压、TVS/ESD、缓启动<br data-page-node-id="UwH7XnwBdN5o7lUpYfBVPE"><b data-page-node-id="0lHpHe8asGlp6vIyFfbVc1">验收</b>：现场演示保护动作</div></div>
+    <div class="chip" data-page-node-id="zYpRk7qPpI1XLWEYoENImc"><div class="t" data-page-node-id="48Ddxt8bNhBHafO0XroOjN">⑤ 布线与电气可靠性</div><div class="p" data-page-node-id="I6U2L9ABybtfeSLMg2rWuV">+10</div>
+      <div class="d" data-page-node-id="tcYLJ1qF1GAcqdkzuQvblo">走线规范、线束捆扎、连接器选型、标识清晰<br data-page-node-id="igEz3lNWCE5bznB2ndnwNO"><b data-page-node-id="fKkNcII61hgUJyDYq29MNT">验收</b>：目视整洁（印象分）</div></div>
+    <div class="chip" data-page-node-id="YH9yFinCRtUFsXrIaElUtj"><div class="t" data-page-node-id="iMIPJCAEyuzwVZ0uGwv2qD">⑥ 创新设计</div><div class="p" data-page-node-id="o4hm5z764JPyewmvywpZPl">+10</div>
+      <div class="d" data-page-node-id="CXCmhlxWCCFt6n8U1EdMy4">要讲出「为什么这样更好」的故事<br data-page-node-id="cC7M3I4W8YFQxjt5KlJOBk"><b data-page-node-id="6IxpacBDGbYVBsRal5Ib5V">验收</b>：有可陈述的设计理由</div></div>
+  </div>
+
+  <div class="note warn" style="margin-top:18px" data-page-node-id="xGOjw68Oc8kPuEiH0uxeMb">
+    <b data-page-node-id="hZ1k1VA4fukkEXutP6PI4g">🔴 硬性红线（最容易白丢的分）</b>：丝印必须标 <b data-page-node-id="icmbcQNpDHeQqtj9VYPKgu">队名 + 绘制者 + 时间</b>，<b data-page-node-id="gx8frSixfjvWTFkDOVFAbx">缺一不认定</b>；
+    PCB 必须<b data-page-node-id="qSSRYmuC47uI7hIm1pxdl3">实际用于上场设备</b>，否则无效；检录时需展示<b data-page-node-id="PnqhjvvNm2GQeaSnr3D0Te">原理图和 PCB 工程文件</b>并演示基本功能。<br data-page-node-id="Ij784Fqvzglsrr0HZACBnJ">
+    ⇒ 建议把丝印做成 PCB 封装模板，一次到位，出图前 checklist 核对。这不是能力问题，是流程问题。
+  </div>
+
+  <h4 style="font-size:16px;font-weight:700;margin:30px 0 12px" data-page-node-id="AT4u0rXLIRfva1OwLF7uWJ">其他自制模块 40 分 · 怎么选</h4>
+  <div class="tbl-wrap" data-page-node-id="A4EsNhBJRvVVAnnBoGgWIF">
+    <table data-page-node-id="o1bLcgU0jznNDFkFDEkEBh">
+      <thead data-page-node-id="9rY3G8aX3QsfvjCElwaSBb"><tr data-page-node-id="7nMXmGSFFZbz5Oo67Jfa3u"><th data-page-node-id="iijLPniIPFHUmJyn34QcsR">优先级</th><th data-page-node-id="Lq27dwaoOr1zLvbooB5dWn">模块</th><th data-page-node-id="uBO0ddTxmC6Yiqiy1076sp">理由</th></tr></thead>
+      <tbody data-page-node-id="weGwNC2Je49HQayZMkMTxV">
+        <tr class="hl" data-page-node-id="R0TWLKHBclDpA6xchNgmkZ"><td data-page-node-id="7JUacsM99dYVkDrpMlro0a"><b data-page-node-id="Iqhi7ZjsE44SiIflCEtcVe">P0</b></td><td data-page-node-id="cbEZQPnzxjlcTD26lwnEjl"><b data-page-node-id="TcfEt5DdHqPsU4Iisf5vGe">H 桥有刷电机驱动</b></td><td data-page-node-id="HmSMPfcZIB8pYhXhTS3F6J">底盘四个轮子必做，做了就得分；技术成熟、资料多</td></tr>
+        <tr class="hl" data-page-node-id="BCEDvoqm2Y69P2JqClfwGk"><td data-page-node-id="pC0jriXx67gJAatJ3cYAMX"><b data-page-node-id="sAWSdGaHaeqCbFUSR0ZDQB">P0</b></td><td data-page-node-id="2s110Co04vhsKwvLgnLrjR"><b data-page-node-id="QHVpLyQjA47vyEgTbtUw0h">降压模块</b></td><td data-page-node-id="5WzWiD1VqsJl0LHZfnOhR7">最简单，练手用，顺便熟悉 DCDC 全流程</td></tr>
+        <tr data-page-node-id="KTsjPAAydIkk1IvUgCqiRB"><td data-page-node-id="kAk0DnqCd7vYu8K3mKWqKJ">P1</td><td data-page-node-id="bvAbaX98AGxlDu1cnfdKqU">锂电池 BMS</td><td data-page-node-id="iy0FzeGtrEKQO9VN6POD2Z">很贴「电硬」定位，但过充过放保护必须可靠</td></tr>
+        <tr data-page-node-id="Crozn1SbRzAWTsmbPNKZha"><td data-page-node-id="7F74q7JGlisGae7N4vkyPp">P1</td><td data-page-node-id="YNU9qVXvzveNjywOA5uJ68">自制遥控器与接收机</td><td data-page-node-id="Q9OsSgqOo3Sk2e0yNKuiim">提升系统集成度，需考虑无线合规</td></tr>
+        <tr data-page-node-id="20BISMODYRwbw1DIEZVrSd"><td data-page-node-id="JAN2AGOdhi5HKJV8jwE3DC">P2</td><td data-page-node-id="oEePCJtvplf5to8DAY2GAT">无刷电机驱动</td><td data-page-node-id="DoTHuqim0tZmJ8Vm7ozBok">走弹丸优先（摩擦轮）则变必需；FOC 门槛高</td></tr>
+        <tr data-page-node-id="BPSF3BsupR3toXnuJTIDkq"><td data-page-node-id="HG71Y4OE9n0iOZ22vl8xOw">P2</td><td data-page-node-id="t5YfMO7xSPKsXPpgHXhfj6">SoC／FPGA 算力平台</td><td data-page-node-id="psaq6XRZrPorppTdZjlP8z">走自主视觉则变必需；难度最高</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note good" style="margin-top:18px" data-page-node-id="ojiDmfXFsgl6YYA4PfIkxi">
+    <b data-page-node-id="rDYDCucCBkatIRBmvpF9qW">🎁 白送的 10 分</b>：规则第 29 页明确「<b data-page-node-id="M1eygrsNo7ttjDD9jlVh1p">使用 MPS（芯源）芯片可额外 +10 分</b>（仅计 1 次），总额仍 ≤ 100 分」。<br data-page-node-id="AgFcWzlagQcMqlMynnf7G7">
+    ⇒ 电源芯片选型时优先考虑 MPS 的 MP 系列。<br data-page-node-id="tKZ96QOdX1iEyvrBBdCJkJ">
+    ⇒ 注意：总额上限仍是 100，它的真实价值是<b data-page-node-id="sKL0w5SopjZmJViHmtcMse">省下 1 个模块的工作量</b>（如 主控60+H桥10+降压10+MPS10 = 90，再加一个10分模块即满100）。
+  </div>
+
+  <!-- ================= 翻车点 ================= -->
+  <h2 data-page-node-id="eZBYYcwLPD6hsBBLJFiXWA">大一队伍常见翻车点</h2>
+  <div class="cmp" data-page-node-id="0juq1Wwygxj8iuNMtMTXoF">
+    <div class="panel warnbox" data-page-node-id="0EXDDpZtgOAS3a5Iz46j5w">
+      <h4 data-page-node-id="SFTbQGR6Hp47KVcDJo7tNP">电气类（你的责任区）</h4>
+      <ul data-page-node-id="Jf7WSREQsD4DlzORhYo8f4">
+        <li data-page-node-id="ciLqzvDOua678y1ooSAFA6"><b data-page-node-id="eAJHu2mo71REk14LDTgBL0">电机启动拉垮电源</b>：电机一转 MCU 就复位、通信丢包 → 电源与电机分开供电、加足量大电容、软启动</li>
+        <li data-page-node-id="CsT5mntkxM2z85F0ETGPi8"><b data-page-node-id="toa1B7CCz0prNGOSmN1Jtu">共地没处理好</b>：ADC 采样漂移、传感器数据跳 → 功率地/数字地/模拟地单点连接，采样走差分</li>
+        <li data-page-node-id="cSapj13Vh4pFU3nrTIhy7y"><b data-page-node-id="Rt6jltucDoYEezzHAPYmep">杜邦线过大电流</b>：发热、烧糊、虚接 → 电源一律 XT30/XT60，信号再用 JST/GH</li>
+        <li data-page-node-id="O2lFUcPK6DCW1fwG8k2Bak"><b data-page-node-id="ICG5yWe8X4IwOhfD2RoVAP">震动导致接触不良</b>：跑着跑着失效、回场又好了 → 连接器带锁扣、打胶固定、线束留余量</li>
+      </ul>
+    </div>
+    <div class="panel warnbox" data-page-node-id="FXrxvBRhARsa4bWplreHpf">
+      <h4 data-page-node-id="5UnGCQtO6uJn2fL7nD73lA">流程类（最容易白丢分）</h4>
+      <ul data-page-node-id="Fo2aDf1lr3VGm9xAxD0Z5u">
+        <li data-page-node-id="ULieUH0Bh1tYxhIILhKPa3"><b data-page-node-id="pHN5LdQXBUKMkPHcgXamSw">丝印缺失</b>：队名/绘制者/时间缺一 ⇒ 硬件加分整项不认定</li>
+        <li data-page-node-id="r5VO8WCgOB6tK3nUtoSQV5"><b data-page-node-id="XqM6VcDs3LbveSSLmjmn0H">PCB 没真用上</b>：板子必须装在上场设备上，否则无效</li>
+        <li data-page-node-id="xVEqysfEuOownI72Mzpnbq"><b data-page-node-id="dpLnYpew7qFrIX2HEWfIom">只画板不调试</b>：焊完跑不起来，又没调试手段 → 提前备好万用表、示波器、稳压电源</li>
+        <li data-page-node-id="B5oiDGPAPBO4oCmoElifdA"><b data-page-node-id="KNX3JfJfEhtyhcVzxzcR2R">芯片无货</b>：打样完买不到料 → 选型时查库存交期，备好替代封装</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ================= 待定问题 ================= -->
+  <h2 data-page-node-id="n4Fq3rlAEzFoI2CsdKCnpx">团队讨论待定问题</h2>
+  <p class="lead" data-page-node-id="9c1fWF7XckxOU67XRPtFlw">🔴 阻塞项必须先解决，否则方案定不下来</p>
+
+  <div class="todo" data-page-node-id="Ufk88ruLwR1oGRBKqPZsXP">
+    <div class="todo-item" data-page-node-id="10PMAN4Tfr9yq3Jdoc3SAr"><div class="no" data-page-node-id="kWJmnOw14oGvyNmhQuTVr2">1</div>
+      <div class="tx" data-page-node-id="FYq36K12RNbMq82WBbXEYD"><b data-page-node-id="DOTS98Do1jF5Nr5Gd8py76">《机器人制作规范》原文在哪？</b>尺寸上限、重量上限、电池电压/容量限制、允许材料清单？
+        <small data-page-node-id="OFrDSAjgZvibuxxrNwhmK2">全队 · 本文档完全未包含这些内容，属硬约束，拿到前不要定最终机械方案</small></div>
+      <span class="badge r" data-page-node-id="FpnKSxQUtGVw0pIPHH2GoZ">阻塞</span></div>
+    <div class="todo-item" data-page-node-id="EyAmRoQoG9B1IBWFKu5K3h"><div class="no" data-page-node-id="EsygWEoMartUgqkg9S6rE3">2</div>
+      <div class="tx" data-page-node-id="d4J0ZHZbAsdSn7ZHa4J48B"><b data-page-node-id="rXhkfDRgHFbN1Sp6xYxYey">靶面直径是多少？靶区中心离地多高？</b>
+        <small data-page-node-id="s3BNxAvH0nnRErIF6B2K6v">机械／视觉 · 决定发射精度要求与云台行程</small></div>
+      <span class="badge r" data-page-node-id="LAORob37GJtZHSAtlCnrKb">阻塞</span></div>
+    <div class="todo-item" data-page-node-id="tSC1UJpdayhWaZsIIr8LBp"><div class="no" data-page-node-id="Oh7Y3qL9BKhDe5NZZNOmyU">3</div>
+      <div class="tx" data-page-node-id="QD5w6E4N4B4dyPpUzF9oq2"><b data-page-node-id="cqlxuWDAGOAqAV8vl86UoC">方块 / 能量单元的重量、材质、摩擦系数？</b>
+        <small data-page-node-id="uVQ7Fis2RNPFNJ596a3gXi">机械／电控 · 决定夹持力、投放方式与摩擦轮参数</small></div>
+      <span class="badge r" data-page-node-id="C11z5nQ1YHTfVCSQNdv9Nj">阻塞</span></div>
+    <div class="todo-item" data-page-node-id="eYKaV42k2QegoajJihTZXd"><div class="no" data-page-node-id="CsDVDEG1v1RZV4lmxIUSf6">4</div>
+      <div class="tx" data-page-node-id="xnUkiIFaafI2v8zzTytrvO"><b data-page-node-id="14raROqGjBbDDu9nvenNLz">兑换孔的检测机制是什么？</b>如何确保「≤1 秒」被正确判定？
+        <small data-page-node-id="c0xA06TPFK6MG6HIDPCpAM">电控／视觉 · 决定「同时兑换」能否稳定成立</small></div>
+      <span class="badge r" data-page-node-id="IY0jLmTvNlHV3D9XTDMCP3">阻塞</span></div>
+    <div class="todo-item" data-page-node-id="PhXvuZErT3LhFwVUG9y2xS"><div class="no" data-page-node-id="DBeiF1dBZjul0MDqt8ULfR">5</div>
+      <div class="tx" data-page-node-id="SHWgMhQrkw3o2GATAoi0VS"><b data-page-node-id="nwXvrJDc0ODpP4Ag8hhPGt">发射区是否供电？功率上限？还是自带电池？</b>
+        <small data-page-node-id="NUDF57xHETi7I5O6AE3IKB">电硬 · 决定视觉算力平台可行性</small></div>
+      <span class="badge r" data-page-node-id="aqF3VcqP4X33YKwD0qjBBU">阻塞</span></div>
+    <div class="todo-item" data-page-node-id="SciXrf480JEw1Fjhw9kESm"><div class="no" data-page-node-id="876DqR3ZEcXPYOMXQJb5XP">6</div>
+      <div class="tx" data-page-node-id="3sZPNItNnjs0bet231J5YQ"><b data-page-node-id="YOt0Xf1rbKehtnilAabHu3">队里谁的视觉／算法能力最强？</b>能否支撑自主瞄准？
+        <small data-page-node-id="Ge1dezSOU4SIloBjrPUPul">全队 · 决定走不走自主模式</small></div>
+      <span class="badge o" data-page-node-id="vXPWNU4sXRPnu3he9DHurn">重要</span></div>
+    <div class="todo-item" data-page-node-id="W9WLv6Sjq4458pLFTskiDA"><div class="no" data-page-node-id="M6lN8LNzskBXk3R2ZFFjV2">7</div>
+      <div class="tx" data-page-node-id="58TazPFkgpXf8Rysu8SE79"><b data-page-node-id="TEJ5C7a0EHxjx7zDYvEpyx">队里谁做过无刷驱动／FOC？</b>
+        <small data-page-node-id="RZrx7jx4IxGixueuDlLJMM">电硬 · 决定发射方案选型</small></div>
+      <span class="badge o" data-page-node-id="D7BArDriS1LC6UBueckPPk">重要</span></div>
+    <div class="todo-item" data-page-node-id="7W3Au0XaLQgCqfP1OyIeHC"><div class="no" data-page-node-id="D0XGGNoOxDQwh4nEIkuG1l">8</div>
+      <div class="tx" data-page-node-id="vIt3odKMlCjlN5i9m9R9AV"><b data-page-node-id="Hw0LKSF9aBr8t3hNzmSStR">机械能否在 7 分钟内稳定上下 200 mm 台阶？</b>
+        <small data-page-node-id="EdwMCvQJ2o1mlusszRl2y7">机械 · 决定能量单元（4×50分）是取还是弃</small></div>
+      <span class="badge o" data-page-node-id="N86jC5oWinyjWbBGKwwzTq">重要</span></div>
+    <div class="todo-item" data-page-node-id="IMRCbrBY647KwFuGRFp2Vz"><div class="no" data-page-node-id="rtCCMAUrPrT5apllyzXRmn">9</div>
+      <div class="tx" data-page-node-id="NV2JCkaZgfI2QE3HYqxCZC"><b data-page-node-id="j1kOSqbc03r11MxoXoqUWn">双投放机构（同时兑换）做不做得出？</b>
+        <small data-page-node-id="h2AcPXBvUGtHeRFwhZk6vf">机械／电控 · 这是唯一能翻倍收益的机械手段</small></div>
+      <span class="badge o" data-page-node-id="AOKor25ENk4ZbBTCiEHL2Z">重要</span></div>
+    <div class="todo-item" data-page-node-id="r0azDflGPK9LpnqnKAECvL"><div class="no" data-page-node-id="MYSjv8sQ4D7zyBlOBfyXyM">10</div>
+      <div class="tx" data-page-node-id="TflGjglHJxZ1HuSmCVV7J8"><b data-page-node-id="Pw52uMTAvFB2WNXWr4fib1">实验室有哪些调试设备？打样经费多少？</b>
+        <small data-page-node-id="gw6OB2eDPNLxGcDYFnU1BO">全队 · 影响整体进度安排</small></div>
+      <span class="badge y" data-page-node-id="vRXUz9iJTunJgBJUgmDrir">一般</span></div>
+  </div>
+
+  <!-- ================= 结论 ================= -->
+  <div class="verdict" data-page-node-id="OrnqEod1K9raMbRVt6xOYL">
+    <h3 data-page-node-id="ezAOBjlgnchMmEO3zonoKt">给你们的路线建议（供讨论，不是结论）</h3>
+    <p data-page-node-id="Kv9TacQddUkerOPmnwTDqD"><strong data-page-node-id="v9jQQbeD6l45HgX6RcLVeX">主线：分数优先保底 ＋ 发射架预留自主升级能力</strong></p>
+    <p data-page-node-id="VfqfQWMAbKLQFv2aYooEXc">
+      理由很简单——<strong data-page-node-id="EPqEblimABLM08MN1P3VJM">分数优先的下限是硬的</strong>（捡到就能兑换），
+      <strong data-page-node-id="6kuRJDnJf2bGNRvRTa0PtR">硬件加分是确定的</strong>（做出板子就有分，不与对手对抗）。
+      这两块加起来，能保证你们哪怕第一次参赛也不会空手而归。
+    </p>
+    <p data-page-node-id="oU8WJKM3R9BFFbMKpWjjxe">
+      但别把弹丸优先彻底放弃：<strong data-page-node-id="dHSq8DGnBxgcPyx9XvOfzJ">自主模式分值是人工的 2 倍</strong>，
+      而且<strong data-page-node-id="ONc44EsZ5clDAL2uDBWbRC">同分判定的前 4 项全是打靶指标</strong>——走分数优先的队伍平局必输。
+      所以发射架要按「将来能升级成自主」来设计（预留云台接口、算力设备供电、通信链路）。
+    </p>
+    <p data-page-node-id="LbTsGzAfXSMRqxXuADuQY5">
+      <strong data-page-node-id="KmQukYdP0oGDqEA5EjldhP">赛程策略</strong>：小组赛先试弹丸优先（自主），拿到真实命中率数据；
+      淘汰赛看数据决策——命中率 ≥ 40% 就走弹丸冲高分，否则回到分数优先保底。
+    </p>
+    <p style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.25)" data-page-node-id="hyB4jTMkDrryDCLLQ1x2m0">
+      <strong data-page-node-id="cu8sOoY5F5jnwgydbBVy5u">对你的提醒</strong>：走弹丸优先，硬件加分的边际收益是分数优先的约 3 倍（10 颗球 × 50% × 60 分 = 300 分 vs 100 分）。
+      也就是说——<strong data-page-node-id="2KaMLEQK8KlEpbQetbvtcI">队伍越偏向弹丸优先，你这块板子的分量就越重</strong>。提前把无刷驱动和云台练起来。
+    </p>
+  </div>
+
+  <footer data-page-node-id="PK5n0O2f42W4twmuDnwNgw">
+    数据来源：《ROBOMINI2027机甲杯规则解读》（华南理工大学机器人未来创新实验室，共 43 页）·
+    整理：长庚 · 2026-11-02 · 供团队路线选型讨论使用
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  const dims = [
+    {name:'机械结构',  s:4,   t:3},
+    {name:'电控硬件',  s:3,   t:5},
+    {name:'嵌入式软件', s:3,   t:4.5},
+    {name:'视觉算法',  s:1,   t:5},
+    {name:'控制理论',  s:2,   t:5},
+    {name:'现场容错',  s:2,   t:5},
+    {name:'上手周期',  s:2,   t:5}
+  ];
+  const cx=310, cy=200, R=140, MAX=5, N=dims.length;
+  const ns='http://www.w3.org/2000/svg';
+  const el=(t,a)=>{const e=document.createElementNS(ns,t);for(const k in a)e.setAttribute(k,a[k]);return e;};
+  const ang=i=>-Math.PI/2 + i*2*Math.PI/N;
+  const pt=(i,v)=>[cx+R*(v/MAX)*Math.cos(ang(i)), cy+R*(v/MAX)*Math.sin(ang(i))];
+
+  // rings
+  const grid=document.getElementById('grid');
+  [1,2,3,4,5].forEach(lv=>{
+    const p=dims.map((_,i)=>pt(i,lv).join(',')).join(' ');
+    grid.appendChild(el('polygon',{points:p,fill:lv%2?'#fbfbfc':'none',
+      stroke:'#e5e7eb','stroke-width':1}));
+  });
+  grid.appendChild(el('text',{x:cx+4,y:cy-R+12,class:'ring-lbl'})).textContent='5';
+  grid.appendChild(el('text',{x:cx+4,y:cy-R*(1/5)+12,class:'ring-lbl'})).textContent='1';
+
+  // axes + labels
+  const axes=document.getElementById('axes');
+  const labels=document.getElementById('labels');
+  dims.forEach((d,i)=>{
+    const [x,y]=pt(i,MAX);
+    axes.appendChild(el('line',{x1:cx,y1:cy,x2:x,y2:y,stroke:'#d1d5db','stroke-width':1}));
+    const [lx,ly]=pt(i,MAX+0.62);
+    const t=el('text',{x:lx,y:ly+4,class:'ax-lbl','text-anchor':
+      (Math.abs(lx-cx)<12?'middle':(lx>cx?'start':'end'))});
+    t.textContent=d.name;
+    labels.appendChild(t);
+  });
+
+  // polygons
+  const build=(id,key)=>{
+    document.getElementById('poly'+id).setAttribute('points',
+      dims.map((d,i)=>pt(i,d[key]).join(',')).join(' '));
+    const g=document.getElementById('pts'+id);
+    dims.forEach((d,i)=>{
+      const [x,y]=pt(i,d[key]);
+      g.appendChild(el('circle',{cx:x,cy:y,r:3.5,fill:'#fff',
+        stroke:id==='S'?'#d97706':'#4f46e5','stroke-width':2}));
+    });
+  };
+  build('S','s'); build('T','t');
+})();
+</script>
+</body>
+</html>

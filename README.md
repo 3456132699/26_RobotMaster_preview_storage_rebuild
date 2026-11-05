@@ -78,27 +78,6 @@ git pull
 > 💡 备份时注意：clone 会带上**完整 Git 历史**。
 > 如果曾经误传过敏感文件，光删当前文件没用，历史里还在（见 4.4）。
 
-### 3.6 Commit message
-
-* 推荐采用Conventional Commits风格：**\<type>(\<scope>):\<description>**
-* type:本次提交的修改类型
-* scope:修改涉及的文件或模块，选填
-* description:描述本次修改的内容
-
-| 类型     | 含义                     | 示例                                 |
-| -------- | ------------------------ | ------------------------------------ |
-| feat     | 新增功能                 | feat(motor):添加电机速度控制         |
-| fix      | 修复问题                 | fix(can):修复电机反馈错误            |
-| refactor | 代码重构，不改变预期功能 | refactor(pid):重构PID控制器接口      |
-| perf     | 性能优化                 | perf(imu):优化姿态解析算法           |
-| docs     | 文档修改                 | docs(README):更新项目README文件      |
-| test     | 添加或修改测试           | test(motor):添加电机控制单元测试     |
-| chore    | 日常维护、配置等修改     | chore(.gitignore):更新.gitignore文件 |
-| build    | 构建系统或依赖修改       | build(CMake):更新CMake配置           |
-| ci       | 持续集成配置修改         | ci:添加自动编译检查                  |
-
-
-
 ---
 
 ## 4. 上传前自检：什么不可以上传 ⭐
